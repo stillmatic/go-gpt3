@@ -214,6 +214,35 @@ func TestResponses(t *testing.T) {
 			},
 		},
 		{
+			"ChatCompletionWithFunctionRaw",
+			func() (interface{}, error) {
+				return client.ChatCompletion(ctx, gpt3.ChatCompletionRequest{
+					Functions: []gpt3.FunctionDefinition{
+						{
+							Name:       "test",
+							Parameters: `{"hello": "world"}`,
+						},
+					},
+				})
+			},
+			&gpt3.ChatCompletionResponse{
+				ID:      "chatcmpl-123",
+				Object:  "messages",
+				Created: 123456789,
+				Model:   "gpt-3.5-turbo",
+				Choices: []gpt3.ChatCompletionResponseChoice{
+					{
+						Index:        0,
+						FinishReason: "stop",
+						Message: gpt3.ChatCompletionResponseMessage{
+							Role:    "assistant",
+							Content: "output",
+						},
+					},
+				},
+			},
+		},
+		{
 			"Completion",
 			func() (interface{}, error) {
 				return client.Completion(ctx, gpt3.CompletionRequest{})

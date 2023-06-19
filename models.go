@@ -39,6 +39,9 @@ type ChatCompletionRequestMessage struct {
 
 	// Content is the content of the message
 	Content string `json:"content"`
+
+	// Name is an optional value indicating the name of the speaker
+	Name string `json:"name,omitempty"`
 }
 
 // ChatCompletionRequest is a request for the chat completion API
@@ -76,8 +79,23 @@ type ChatCompletionRequest struct {
 	// Modify the probability of specific tokens appearing in the completion.
 	LogitBias map[string]float32 `json:"logit_bias,omitempty"`
 
-	// Can be used to identify an end-user
+	// Can be used to identify an end-user.
 	User string `json:"user,omitempty"`
+
+	// Defines a structure for functions the model can call.
+	Functions []FunctionDefinition `json:"functions,omitempty"`
+
+	FunctionCall interface{} `json:"function_call,omitempty"`
+}
+
+type FunctionDefinition struct {
+	// The name of the function to define.
+	Name string `json:"name"`
+	// Description of the function (optional).
+	Description string `json:"description,omitempty"`
+	// The function's parameters.
+	// You can pass a raw byte array describing the schema,
+	Parameters interface{} `json:"parameters"`
 }
 
 // CompletionRequest is a request for the completions API
@@ -152,8 +170,10 @@ type LogprobResult struct {
 
 // ChatCompletionResponseMessage is a message returned in the response to the Chat Completions API
 type ChatCompletionResponseMessage struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+	Role         string      `json:"role"`
+	Content      string      `json:"content"`
+	Name         string      `json:"name,omitempty"`
+	FunctionCall interface{} `json:"function_call,omitempty"`
 }
 
 // ChatCompletionResponseChoice is one of the choices returned in the response to the Chat Completions API
